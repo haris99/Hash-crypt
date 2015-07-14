@@ -1,0 +1,74 @@
+package ProjectHD;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientConnector {
+	private ServerSocket serverSocket;
+	private Socket acceptSocket;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+	private AudioInput speaker;
+	private AudioOutput microphone;
+	
+	
+	
+	public ClientConnector (int port){
+		try {
+			serverSocket = new ServerSocket(port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void waitForConnection(){
+		try {
+			acceptSocket = serverSocket.accept();
+			oos = new ObjectOutputStream(acceptSocket.getOutputStream());
+			ois = new ObjectInputStream(acceptSocket.getInputStream());
+			Message message;
+			try {
+				message = (Message) ois.readObject();
+				if (message.getMessageText() == "connect to room"){
+					System.out.println(message.getMessageText());
+					startMicrophone();
+					startSpeakers();
+					}
+					else
+					{
+						System.out.println("Wrong message");
+					}
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void startMicrophone(){
+		microphone = new AudioOutput(acceptSocket);
+		Thread senderThread = new Thread(microphone);
+		senderThread.start();
+	}
+	
+	public void startSpeakers(){
+		speaker = new AudioInput(acceptSocket);
+		Thread receiverThread = new Thread(speaker);
+		receiverThread.start();
+	}
+	
+	public void suspendSpeakers(){
+		speaker.pause();
+	}
+	
+	public void suspendMicrophone(){
+		microphone.pause();
+	}
+}

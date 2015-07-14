@@ -1,0 +1,125 @@
+package rtu.dip386.praktiskais2.impl.HD121RDB502;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.nio.file.Files;
+
+import rtu.dip386.praktiskais2.Server;
+import rtu.dip386.praktiskais2.ServerClientWorker;
+
+public class ServerImpl implements Server{
+	private int serverPort = rtu.dip386.praktiskais2.Server.DEFAULT_PORT;
+	private boolean acceptClients = false;
+	private File fileDirectory = null;
+	private ServerSocket serverSocket;
+
+	@Override
+	public void setLocalPort(int portNumber) {
+		serverPort=portNumber;
+	}
+
+	@Override
+	public int getLocalPort() {
+		return serverPort;
+	}
+
+	@Override
+	public void startServer() {
+		this.acceptClients = true;
+		try{
+			serverSocket = new ServerSocket(this.serverPort);
+			while(this.acceptClients){
+				System.out.println("waiting for connections @"+this.serverPort);
+				Socket socket = serverSocket.accept();
+				System.out.println("client accepted creating handler...");
+				ServerClientWorker worker = new ServerClientWorkerImpl(socket, this);
+				Thread clientThread = new Thread(worker);
+				clientThread.start();
+				System.out.println("Thread started");
+			}
+		} catch (IOException ex){
+			ex.printStackTrace();
+			throw new IllegalStateException(ex);
+		} finally{
+			try{
+				serverSocket.close();
+			} catch (Exception ex){}
+		}
+	}
+
+	@Override
+	public void stopServer() {
+		this.acceptClients = false;
+	}
+
+	@Override
+	public void disconnectClient(int index) {
+		// ignore
+		
+	}
+
+	@Override
+	public List<String> getFileList() {
+		
+		List<File> fileList=new ArrayList<File>();
+		List<String> fileNames = new ArrayList<String>();
+		
+		if (fileDirectory.isDirectory())
+		{
+			fileList = Arrays.asList(fileDirectory.listFiles());
+			for (int i = 0; i < fileList.size(); i++) {
+			      if (fileList.get(i).isFile()) {
+			        fileNames.add(fileList.get(i).getName());
+			    }
+			
+			}
+		}
+		return fileNames;
+	
+	}
+
+	@Override
+	public byte[] getFile(String fileName) throws FileNotFoundException {
+		
+		File fileToRead = new File(fileDirectory, fileName);
+		if(!fileToRead.exists()){
+			System.out.println("FileNotFound: "+fileToRead.getAbsolutePath());
+			throw new FileNotFoundException(fileName);
+		}
+		byte[] result = null;
+	        try {
+				result = Files.readAllBytes(fileToRead.toPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		return result;
+	}
+
+	
+	@Override
+	public void setFileDirectory(String directory) {
+		fileDirectory=new File(directory);;
+		
+	}
+
+	@Override
+	public File getFileDirectory() {
+		return fileDirectory;
+	}
+	
+	public static void main(String[] args) {
+		Server server = new ServerImpl();
+		server.setLocalPort(Server.DEFAULT_PORT);
+		server.setFileDirectory("c:/tmp/studentGrades/");
+		server.startServer();
+	}
+	
+	
+
+}

@@ -1,0 +1,11 @@
+package ProjectHD;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+
+public class ChatConnector {
+	protected Socket connection;
+	protected ObjectInputStream ois;
+	protected ObjectOutputStream oos;
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<typeInfoHistroy>
+<typeInfo handle="=SEF/src&lt;sef.module5.sample{Singleton.java[Singleton" modifiers="1" timestamp="1436250882000"/>
+<typeInfo handle="=SEF/src&lt;sef.module5.sample{SingletonRecommended.java[SingletonRecommended" modifiers="1" timestamp="1436250882000"/>
+<typeInfo handle="=SEF/C:\/Program Files\/Java\/jdk1.8.0_45\/jre\/lib\/rt.jar&lt;sun.security.jca(GetInstance.class[GetInstance" modifiers="33" timestamp="1436165708218"/>
+<typeInfo handle="=SEF/C:\/Program Files\/Java\/jdk1.8.0_45\/jre\/lib\/rt.jar&lt;java.lang(String.class[String" modifiers="49" timestamp="1436165708218"/>
+<typeInfo handle="=SEF/C:\/Program Files\/Java\/jdk1.8.0_45\/jre\/lib\/rt.jar&lt;java.util(Calendar.class[Calendar" modifiers="1057" timestamp="1436165708218"/>
+<typeInfo handle="=SEF/C:\/Program Files\/Java\/jdk1.8.0_45\/jre\/lib\/rt.jar&lt;java.lang(Object.class[Object" modifiers="33" timestamp="1436165708218"/>
+<typeInfo handle="=SEF/C:\/Program Files\/Java\/jdk1.8.0_45\/jre\/lib\/rt.jar&lt;java.util.concurrent(CopyOnWriteArraySet.class[CopyOnWriteArraySet" modifiers="33" timestamp="1436165708218"/>
+</typeInfoHistroy>

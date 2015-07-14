@@ -1,0 +1,20 @@
+
+class test {
+	
+	  static void methodOne() {
+		  double x = 2;
+		  double y = 2;
+		  
+		  double x2=1;;
+		  double y2=1;
+		  
+			double aSqr = (x2-x)*((x2-x));
+			double bSqr = (y2-y)*((y2-y));
+			double distance = Math.sqrt(aSqr+bSqr);
+			System.out.println(distance);
+	  }
+	  
+	  public static void main (String args[]){
+		  methodOne();
+	  }
+	}

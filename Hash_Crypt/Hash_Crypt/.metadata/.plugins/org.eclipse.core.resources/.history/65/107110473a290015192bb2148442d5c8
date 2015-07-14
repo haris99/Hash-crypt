@@ -1,0 +1,19 @@
+package ProjectHD;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+
+public class ClientConnector {
+	private ServerSocket serverSocket;
+	private Socket acceptSocket;
+	
+	
+	public ClientConnector (int port){
+		try {
+			ServerSocket serverSocket = new ServerSocket(port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

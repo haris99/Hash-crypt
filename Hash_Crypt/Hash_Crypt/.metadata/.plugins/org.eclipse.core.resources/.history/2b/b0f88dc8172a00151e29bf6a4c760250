@@ -1,0 +1,45 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class ThreadTest implements Runnable{
+	private String fileName;
+	
+	public ThreadTest(String fileName){
+		this.fileName = fileName;
+	}
+	
+	public void start(){
+		run();
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+	        StringBuilder sb = new StringBuilder();
+	        String line = br.readLine();
+
+	        while (line != null) {
+	            sb.append(line);
+	            sb.append(System.lineSeparator());
+	            line = br.readLine();
+	        }
+	        String everything = sb.toString();
+	        System.out.println("File: "+ fileName +"read");
+	    } catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
+	
+	
+}

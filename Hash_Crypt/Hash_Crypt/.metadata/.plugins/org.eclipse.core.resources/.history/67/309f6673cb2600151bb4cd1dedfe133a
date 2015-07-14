@@ -1,0 +1,17 @@
+package ProjectHD;
+
+public class User {
+	private String userName;
+	private String ipAdress;
+	
+	
+public User(){
+	userName = "default";
+	ipAdress = null;
+}
+
+public User(String userName, String ipAdress){
+	this.userName = userName;
+	this.ipAdress = ipAdress;
+}
+}

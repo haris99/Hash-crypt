@@ -1,0 +1,12 @@
+package ProjectHD;
+
+public class User {
+	private String userName;
+	private String ipAdress;
+	
+	
+public User(){
+	userName = "default";
+	ipAdress = null;
+}
+}

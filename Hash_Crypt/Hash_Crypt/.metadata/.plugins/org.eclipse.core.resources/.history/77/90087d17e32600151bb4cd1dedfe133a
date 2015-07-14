@@ -1,0 +1,12 @@
+package ProjectHD;
+
+import java.net.Socket;
+
+public class ServerConnector {
+	private Socket connection;
+	
+	
+	public ServerConnector(String ipAdress, int socket){
+		connection = new Socket(ipAdress, socket);
+	}
+}

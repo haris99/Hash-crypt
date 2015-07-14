@@ -1,0 +1,34 @@
+package ProjectHD;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+
+public class AudioInput {
+    private AudioFormat audioFormat;
+    private DataLine.Info line;
+    private SourceDataLine inSpeaker = null;
+    
+    
+    public AudioInput(){
+    	audioFormat = new AudioFormat(8000.0f,8,1,true,false);
+    	line = new DataLine.Info(SourceDataLine.class, audioFormat);
+    	try {
+			inSpeaker = (SourceDataLine)AudioSystem.getLine(line);
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    private void openSpeaker(){
+    	try {
+			inSpeaker.open();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+}

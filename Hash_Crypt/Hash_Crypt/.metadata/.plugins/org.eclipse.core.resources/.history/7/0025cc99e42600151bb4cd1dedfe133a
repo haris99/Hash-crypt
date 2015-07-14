@@ -1,0 +1,39 @@
+package ProjectHD;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+public class MessageHandler {
+	Message message;
+	
+	
+	public static void handleMessage(ObjectInputStream ois, ObjectOutputStream oos) {
+		Message message;
+		try {
+			message = (Message) ois.readObject();
+			if (message.getMessageText().contains("client connect")){
+				handleClientMessage(message.getMessageText());
+			}
+			else
+			if (message.getMessageText().contains("supporter connect")){
+				handleSupporterMessage(message.getMessageText());
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private static void handleClientMessage(String message){
+		
+	}
+	
+	private static void handleSupporterMessage(String message){
+		
+	}
+}

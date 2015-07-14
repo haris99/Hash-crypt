@@ -1,0 +1,148 @@
+package ProjectHD;
+
+import java.awt.EventQueue;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import javax.swing.JFrame;
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Font;
+import javax.swing.JFormattedTextField;
+import javax.swing.JCheckBox;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+
+public class SupportWindow {
+	private JFrame frame;
+	private JLabel statusLabel;
+	private JFormattedTextField supporterTextField;
+	private JCheckBox chckbxSound;
+	JCheckBox chckbxMicrophone;
+	ClientConnector clientConnector;
+	private boolean running = false;
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					SupportWindow window = new SupportWindow();
+
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public SupportWindow() {
+		initialize();
+	}
+
+	private void runConnection() {
+		statusLabel.setText("Setting up streams");
+		String ipAdress = "192.168.10.118";
+		int socket = 3000;
+		// IMPLEMENT CONNECTION TO SERVER SO IT SAVES IP?
+		// statusLabel.setText("Waiting for connection");
+		ServerConnector connection = new ServerConnector(ipAdress, socket);
+		connection.open();
+		connection.writeMessage("supporter connect "+supporterTextField.getText());
+		// Message message = connection.readMessage();
+		statusLabel.setText("Connection established");
+		// runConnection();
+		clientConnector = new ClientConnector(3001);
+		clientConnector.waitForConnection();
+		// NEED TO BE STARTED IN SEQUENCE CHANGE LATER
+		clientConnector.startMicrophone();
+		clientConnector.startSpeakers();
+		chckbxSound.setEnabled(true);
+		chckbxMicrophone.setEnabled(true);
+		running = true;
+
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 534, 411);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+
+		
+		
+		supporterTextField = new JFormattedTextField();
+		supporterTextField.setBounds(10, 45, 177, 20);
+		frame.getContentPane().add(supporterTextField);
+		
+		JLabel lblName = new JLabel("Enter your name:");
+		lblName.setBounds(10, 20, 177, 14);
+		frame.getContentPane().add(lblName);
+		
+		statusLabel = new JLabel("Start the connection");
+		statusLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		statusLabel.setBounds(10, 76, 184, 20);
+		frame.getContentPane().add(statusLabel);
+		JButton waitButton = new JButton("WAIT FOR CONNECTION");
+		waitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				runConnection();
+			}
+		});
+		waitButton.setBounds(10, 107, 219, 23);
+		frame.getContentPane().add(waitButton);
+		
+		chckbxSound = new JCheckBox("Sound");
+		chckbxSound.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if(clientConnector.isRunning()){
+				if (chckbxSound.isSelected()) {
+					clientConnector.suspendSpeakers();
+				}
+				else{
+					clientConnector.resumeSpeakers();
+				}
+				}
+			}
+		});
+		chckbxSound.setEnabled(false);
+		chckbxSound.setSelected(true);
+		chckbxSound.setBounds(10, 145, 97, 23);
+		frame.getContentPane().add(chckbxSound);
+		
+		chckbxMicrophone = new JCheckBox("Microphone");
+		chckbxMicrophone.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if(clientConnector.isRunning()){
+				if (chckbxMicrophone.isSelected()) {
+					clientConnector.suspendMicrophone();
+				}
+				else{
+					clientConnector.resumeMicrophone();
+				}
+				}
+			}
+		});
+		chckbxMicrophone.setEnabled(false);
+		chckbxMicrophone.setSelected(true);
+		chckbxMicrophone.setBounds(10, 171, 97, 23);
+		frame.getContentPane().add(chckbxMicrophone);
+	}
+}

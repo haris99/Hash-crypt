@@ -1,0 +1,17 @@
+
+class test {
+	
+	  static void methodOne() {
+	  }
+	  
+	  public static void main (String args[]){
+		  int bearing = -710;
+		  if (bearing >=360){
+				bearing = bearing % 360;
+			}
+		  if (bearing < 0){
+				bearing = 360 + bearing % 360;
+			}
+		  System.out.println(bearing);
+	  }
+	}

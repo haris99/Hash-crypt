@@ -1,0 +1,89 @@
+package ProjectHD;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Arrays;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.TargetDataLine;
+
+public class AudioOutput implements Runnable {
+	private AudioFormat audioFormat;
+	private TargetDataLine microphone;
+	private DataLine.Info line;
+	public static DataOutputStream outMic;
+	public volatile boolean running = true;
+	public volatile boolean stopped = false;
+
+	public AudioOutput(Socket socket) {
+		audioFormat = new AudioFormat(8000.0f, 8, 1, true, false); // was 8 bits
+		line = new DataLine.Info(TargetDataLine.class, audioFormat);
+		
+		try {
+			microphone = (TargetDataLine) AudioSystem.getLine(line);
+			openMicrophone();
+			startMicrophone();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//PAREIZI IZVEIDOT THREADU
+	
+	public void start(){
+		run();
+	}
+	
+	public void pause(){
+		running = false;
+	}
+	
+	public void resume(){
+		running = true;
+	}
+	
+	public void stop(){
+		stopped = true;
+	}
+
+	private void openMicrophone() {
+		try {
+			microphone.open(audioFormat);
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void startMicrophone() {
+		microphone.start();
+	}
+
+	public void run() {
+		int bytesRead = 0;
+		byte[] soundBytes = new byte[1];
+		int readBytes = 0;
+		while (stopped == false){
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		while ((readBytes != -1 && running == true)) {
+			bytesRead =microphone.read(soundBytes, 0, soundBytes.length);
+			//System.out.println(Arrays.toString(soundBytes));
+			
+				outMic.write(soundBytes, 0, bytesRead);
+				//System.out.println(soundBytes.toString());
+			
+			// System.out.println(suspended);
+		}
+		}
+	}
+
+}

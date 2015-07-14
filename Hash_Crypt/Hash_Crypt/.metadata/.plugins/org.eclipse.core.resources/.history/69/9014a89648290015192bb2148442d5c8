@@ -1,0 +1,54 @@
+package ProjectHD;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientConnector extends Connector {
+	private int port;
+	private ServerSocket serverSocket;
+	//private Socket acceptSocket;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+	//private AudioInput speaker;
+	//private AudioOutput microphone;
+	private boolean running = false;
+
+	public ClientConnector(int port) {
+		this.port = port;
+	}
+
+	
+	public void waitForConnection() {
+		try {
+			serverSocket = new ServerSocket(port);
+			connection = serverSocket.accept();
+			oos = new ObjectOutputStream(acceptSocket.getOutputStream());
+			ois = new ObjectInputStream(acceptSocket.getInputStream());
+			Message message;
+			running = true;
+			try {
+				message = (Message) ois.readObject();
+				if (message.getMessageText() == "connect to room") {
+					System.out.println(message.getMessageText());
+					startMicrophone();
+					startSpeakers();
+				} else {
+					System.out.println("Wrong message");
+				}
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean isRunning(){
+		return running;
+	}
+}

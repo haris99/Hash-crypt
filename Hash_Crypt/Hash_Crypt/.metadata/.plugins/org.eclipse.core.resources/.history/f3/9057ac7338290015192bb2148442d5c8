@@ -1,0 +1,23 @@
+package ProjectHD;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+public class SupportConnector {
+	private Socket connection;
+	
+	
+	
+	public SupportConnector(String ipAdress, int socket){
+		try {
+			connection = new Socket(ipAdress, socket);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}

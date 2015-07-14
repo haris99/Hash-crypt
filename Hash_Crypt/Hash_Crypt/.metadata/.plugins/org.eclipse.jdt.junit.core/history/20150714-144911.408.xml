@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="RadarContactTest" project="SEF" tests="2" started="2" failures="2" errors="0" ignored="0">
+  <testsuite name="sef.module9.activity.RadarContactTest" time="0.026">
+    <testcase name="testRadarContactPostiveBearing" classname="sef.module9.activity.RadarContactTest" time="0.022">
+      <failure>junit.framework.AssertionFailedError&#13;
+	at junit.framework.Assert.fail(Assert.java:47)&#13;
+	at junit.framework.Assert.fail(Assert.java:53)&#13;
+	at sef.module9.activity.RadarContactTest1.testRadarContactPostiveBearing(RadarContactTest1.java:46)&#13;
+	at sef.module9.activity.RadarContactTest.testRadarContactPostiveBearing(RadarContactTest.java:10)&#13;
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)&#13;
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)&#13;
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)&#13;
+	at java.lang.reflect.Method.invoke(Method.java:497)&#13;
+	at junit.framework.TestCase.runTest(TestCase.java:164)&#13;
+	at junit.framework.TestCase.runBare(TestCase.java:130)&#13;
+	at junit.framework.TestResult$1.protect(TestResult.java:106)&#13;
+	at junit.framework.TestResult.runProtected(TestResult.java:124)&#13;
+	at junit.framework.TestResult.run(TestResult.java:109)&#13;
+	at junit.framework.TestCase.run(TestCase.java:120)&#13;
+	at junit.framework.TestSuite.runTest(TestSuite.java:230)&#13;
+	at junit.framework.TestSuite.run(TestSuite.java:225)&#13;
+	at org.eclipse.jdt.internal.junit.runner.junit3.JUnit3TestReference.run(JUnit3TestReference.java:131)&#13;
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)&#13;
+&#13;
+</failure>
+    </testcase>
+    <testcase name="testRadarContactNegativeBearing" classname="sef.module9.activity.RadarContactTest" time="0.003">
+      <failure>junit.framework.AssertionFailedError&#13;
+	at sef.module.percentage.Percentage.setFailedCount(Percentage.java:30)&#13;
+	at sef.module9.activity.RadarContactTest1.testRadarContactNegativeBearing(RadarContactTest1.java:85)&#13;
+	at sef.module9.activity.RadarContactTest.testRadarContactNegativeBearing(RadarContactTest.java:14)&#13;
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)&#13;
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)&#13;
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)&#13;
+	at java.lang.reflect.Method.invoke(Method.java:497)&#13;
+	at junit.framework.TestCase.runTest(TestCase.java:164)&#13;
+	at junit.framework.TestCase.runBare(TestCase.java:130)&#13;
+	at junit.framework.TestResult$1.protect(TestResult.java:106)&#13;
+	at junit.framework.TestResult.runProtected(TestResult.java:124)&#13;
+	at junit.framework.TestResult.run(TestResult.java:109)&#13;
+	at junit.framework.TestCase.run(TestCase.java:120)&#13;
+	at junit.framework.TestSuite.runTest(TestSuite.java:230)&#13;
+	at junit.framework.TestSuite.run(TestSuite.java:225)&#13;
+	at org.eclipse.jdt.internal.junit.runner.junit3.JUnit3TestReference.run(JUnit3TestReference.java:131)&#13;
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)&#13;
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)&#13;
+&#13;
+</failure>
+    </testcase>
+  </testsuite>
+</testrun>

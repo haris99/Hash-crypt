@@ -1,0 +1,8 @@
+package ProjectHD;
+
+import java.net.Socket;
+
+public class SupportConnector {
+	private Socket connectionToSupport;
+	
+}

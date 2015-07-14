@@ -1,0 +1,37 @@
+package ProjectHD;
+
+public abstract class Connector {
+	
+		private AudioInput speaker;
+		private AudioOutput microphone;
+	
+	public void startSpeakers() {
+		speaker = new AudioInput(connection);
+		Thread receiverThread = new Thread(speaker);
+		receiverThread.start();
+	}
+
+	public void startMicrophone() {
+		microphone = new AudioOutput(connection);
+		Thread senderThread = new Thread(microphone);
+		senderThread.start();
+	}
+
+	public void suspendSpeakers() {
+		speaker.pause();
+	}
+
+	public void suspendMicrophone() {
+		microphone.pause();
+	}
+
+	public void resumeSpeakers() {
+		speaker.resume();
+	}
+
+	public void resumeMicrophone() {
+		microphone.resume();
+	}
+	
+
+}

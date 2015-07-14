@@ -1,0 +1,25 @@
+package ProjectHD;
+
+public class OldType {
+	
+	public String show()
+	{
+		return "OLD";
+	}
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+			        
+		NewType nt = new NewType();
+		System.out.println(nt.show());
+	}
+}
+
+class NewType extends OldType{
+	
+	public String show()
+	{
+		return super.show()+" and New";
+	}
+	
+
+}

@@ -1,0 +1,81 @@
+package ProjectHD;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collection;
+
+public class Server {
+	private static ArrayList<Supporter> supporterList=new ArrayList<>();
+	private static  ArrayList<Client> clientList=new ArrayList<>();
+	
+	
+public static void addClient(Client client){
+	clientList.add(client);
+}
+	
+	
+	public static void main(String args[]) throws IOException {
+		ServerSocket serverSocket = new ServerSocket(3000);
+		while (true) {
+			Thread connectThread = new Thread(new ConnectThread(serverSocket.accept()));
+			connectThread.start();
+		}
+	}
+}
+
+class ConnectThread implements Runnable {
+	private volatile boolean done = false;
+	private ObjectInputStream ois;
+	private ObjectOutputStream oos;
+	public static Collection<Socket> sockets = new ArrayList<Socket>();
+	private Socket connection = null;
+	DataInputStream dataIn = null;
+	DataOutputStream dataOut = null;
+	
+	public ConnectThread(Socket socket) throws IOException{
+		connection = socket;
+		socket.getRemoteSocketAddress().toString();
+	    ois = new ObjectInputStream(connection.getInputStream());
+	    oos = new ObjectOutputStream(connection.getOutputStream());
+	    sockets.add(connection);
+	}
+
+	public void start() {
+		run();
+	}
+
+	public void run() {
+		// TODO Auto-generated method stub
+		while(!connection.isClosed() && !done){
+			String ipAdress = clientList.get(1).getIpAdress;
+			MessageHandler.handleMessage(ois, oos, ipAdress);
+			//readMessage();
+			try{
+				Thread.sleep(100);
+			} catch (InterruptedException ex){}
+		}
+	}
+	
+	
+	private void handleClientMessage(String message){
+		try {
+			oos.writeObject(new Message("192.168.10.118",null));//insert code to get ip
+			oos.flush();
+			System.out.println("message sent!");
+			done = true;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void handleSupporterMessage (String message){
+		
+	}
+}

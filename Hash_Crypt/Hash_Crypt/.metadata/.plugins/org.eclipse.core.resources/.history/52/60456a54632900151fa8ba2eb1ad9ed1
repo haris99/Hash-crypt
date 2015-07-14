@@ -1,0 +1,142 @@
+package Project..HD121RDB502;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.nio.file.Files;
+import java.util.Date;
+
+import rtu.dip386.praktiskais2.Command;
+import rtu.dip386.praktiskais2.Server;
+import rtu.dip386.praktiskais2.ServerClientWorker;
+
+public class ServerClientWorkerImpl implements ServerClientWorker{
+	private Socket socket;
+	private Server server;
+	private ObjectInputStream ois;
+	private ObjectOutputStream oos;
+	private Date connectDate = new Date();
+	private boolean isError = false;
+	
+	public ServerClientWorkerImpl(Socket socket, Server server){
+		this.socket = socket;
+		this.server = server;
+		try {
+			this.oos = new ObjectOutputStream(socket.getOutputStream());
+			this.oos.flush();
+			this.ois = new ObjectInputStream(socket.getInputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void run() {
+		while(!socket.isClosed() && !isError){
+			readCommand();
+			try{
+				Thread.sleep(100);
+			} catch (InterruptedException ex){}
+		}
+	}
+	
+	private void readCommand(){
+		Command cmd;
+		try{
+			cmd = (Command) ois.readObject();
+
+			if(cmd.getAction().equals(Command.getCmdGetList().getAction())){
+				writeFileList();
+			} else if(cmd.getAction().equals(Command.getCmdGetFile().getAction())){
+				String file = cmd.getProperties().getProperty("fileName");
+				writeFile(file);
+			} else if(cmd.getAction().equals(Command.getCmdGetFileSize().getAction())){
+				String file = cmd.getProperties().getProperty("fileName");
+				writeFileSize(file);
+			}
+		} catch (IOException | ClassNotFoundException ex){
+			//ex.printStackTrace();
+			isError = true;
+		}
+	}
+	
+	private void writeFile(String file) {
+		writeError(null);
+		//byte [] myByteArray=null;
+		//int len=0;
+		try {
+			//len = server.getFile(file).length;
+			//myByteArray = new byte [len];
+			//myByteArray = Files.readAllBytes(file.toPath());
+			//this.oos.writeObject(myByteArray);
+			this.oos.write(server.getFile(file));
+			this.oos.flush();
+		}
+		catch (IOException e1)
+		{
+			writeError(e1.getMessage());
+		}
+	}
+
+	private void writeFileList() {
+		writeError(null);
+		try {
+			this.oos.writeObject(server.getFileList());
+			this.oos.flush();
+		} catch (IOException e) {
+			//e.printStackTrace();
+			writeError(e.getMessage());
+		}
+		
+	}
+
+	private void writeFileSize(String file){
+		writeError(null);
+		try{
+			int fileSize = server.getFile(file).length;
+			this.oos.writeObject(new Long(fileSize));
+			this.oos.flush();
+		} catch (IOException ex){
+			//ex.printStackTrace();
+			writeError(ex.getMessage());
+		}
+	}
+
+	private void writeError(Object object) {
+		try {
+			this.oos.writeObject(object);
+			this.oos.flush();
+		} catch (IOException e) {
+			//e.printStackTrace();
+			writeError(e.getMessage());
+		}
+		
+		
+	}
+
+	@Override
+	public InetAddress getClientAddress() {
+		
+		return socket.getInetAddress();
+	}
+
+	@Override
+	public int getClientPort() {
+		return socket.getPort();
+	}
+
+	@Override
+	public Date getClientConnectDate() {
+		
+		return connectDate;
+	}
+
+	@Override
+	public Socket getSocket() {
+		return socket;
+	}
+
+}

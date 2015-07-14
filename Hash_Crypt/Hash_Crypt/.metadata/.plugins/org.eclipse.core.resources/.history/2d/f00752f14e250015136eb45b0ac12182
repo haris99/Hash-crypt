@@ -1,0 +1,246 @@
+package rtu.dip386.praktiskais2.impl.HD121RDB502;
+
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
+import rtu.dip386.praktiskais2.Client;
+import rtu.dip386.praktiskais2.Command;
+import rtu.dip386.praktiskais2.ErrorMessage;
+import rtu.dip386.praktiskais2.Server;
+import rtu.dip386.praktiskais2.StudentInfo;
+
+public class ClientImpl implements Client{
+	private String remoteHost;
+	private int remotePort;
+	private ObjectInputStream inputStream;
+	private ObjectOutputStream outputStream;
+	Socket socket;
+	BufferedReader br;
+	@Override
+	public void setRemoteAddress(String remoteHostName) {
+		this.remoteHost = remoteHostName;
+	}
+
+	@Override
+	public void setRemotePort(int serverPort) {
+		this.remotePort = serverPort;
+	}
+
+	@Override
+	public void connect() {
+		try {
+			socket = new Socket(remoteHost, remotePort);
+			this.inputStream = new ObjectInputStream(socket.getInputStream());
+			this.outputStream = new ObjectOutputStream(socket.getOutputStream());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+				
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getServerFileList() {
+		List<String> list= new ArrayList<String>();
+		ErrorMessage errMsg=null;
+		Command cmdFileList = Command.getCmdGetList();
+		sendCommandToServer(cmdFileList);
+		try{
+			errMsg = (ErrorMessage) inputStream.readObject();}
+			catch (IOException ex)
+			{
+				ex.printStackTrace();
+			} 
+			catch (ClassNotFoundException ex1)
+			{
+				ex1.printStackTrace();
+			}
+		if(errMsg == null || errMsg.getErrorText() == null || errMsg.getErrorText().isEmpty()){
+			try {
+				list = (List<String>) inputStream.readObject();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else 
+		{
+			System.err.println(errMsg);
+			return null;
+		}
+		
+		return list;
+	}
+
+	@Override
+	public int getFileSize(String fileName) {
+		Command cmdGetFileSize = Command.getCmdGetFileSize();
+		Properties properties = new Properties();
+		properties.put("fileName", fileName);
+		cmdGetFileSize.setProperties(properties);
+		sendCommandToServer(cmdGetFileSize);
+		ErrorMessage errMsg=null;
+		
+		Long fileSize = (long)-1;
+		try{
+		errMsg = (ErrorMessage) inputStream.readObject();}
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+		} 
+		catch (ClassNotFoundException ex1)
+		{
+			ex1.printStackTrace();
+		}
+		if(errMsg == null || errMsg.getErrorText() == null || errMsg.getErrorText().isEmpty()){
+			try {
+				fileSize = (Long) inputStream.readObject();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			return 0;
+		}
+		return fileSize.intValue();
+	}
+
+	@Override
+	public File getFile(String fileName) {
+		byte[] fileContent=new byte[getFileSize(fileName)];
+		File localTempFile = null;
+		try {
+			localTempFile = File.createTempFile("studentGrades", ".txt");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		Command cmdGetFile = Command.getCmdGetFile();
+		Properties properties = new Properties();
+		properties.put("fileName", fileName);
+		cmdGetFile.setProperties(properties);
+		sendCommandToServer(cmdGetFile);					
+		
+		ErrorMessage errMsg = null;
+		try {
+			errMsg = (ErrorMessage) inputStream.readObject();
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		if(errMsg == null || errMsg.getErrorText() == null || errMsg.getErrorText().isEmpty()){
+			try {
+				//fileContent = (byte[])inputStream.readObject();
+				inputStream.readFully(fileContent);
+			//} catch (ClassNotFoundException e) {
+			//	e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
+			return null;
+		}
+		try{
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(localTempFile));
+		bos.write(fileContent);
+		bos.flush();
+		bos.close();
+		 FileOutputStream fos = new FileOutputStream(localTempFile);
+		    fos.write(fileContent);
+		    fos.close();}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return localTempFile;
+	}
+
+	@Override
+	public List<StudentInfo> processStudentFile(File file, String delimiter) {
+		int count = 1;
+		double value;
+		List<Double> values = new ArrayList<Double>();
+		double sum = 0;
+		double average=0;
+		String line = null;
+		StudentInfo info = null;
+		List<StudentInfo> list = new ArrayList<StudentInfo>();
+		File studentData = getFile(file.getName());
+		//TODO: process student data file
+		try {
+			br = new BufferedReader(new FileReader(studentData));
+			while ((line=br.readLine()) != null) {
+				count = 1;
+				sum = 0;
+				String []lineParts = line.split(delimiter);
+					while (count<lineParts.length)
+					{	
+						
+						value = Double.parseDouble(lineParts[count]);
+						values.add(value);
+						count = count +1;
+					}
+					for (int i = 1; i < values.size(); i++){
+				        sum=sum+ values.get(i);}
+					
+					average = sum/(double)values.size()-1;
+					info = new StudentInfo(lineParts[0],(double)Collections.max(values),(double)Collections.min(values),average,(int)(values.size()-1));
+					list.add(info);
+			//SADALIT LINIJU, IELIKT OBJEKTA
+			}
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e2){
+			e2.printStackTrace();
+		}
+	    //PROCESS FILE
+		
+	    
+	    System.out.println("Pirmais ieraksts: ID: "+list.get(0).getId());
+	    System.out.println("MAX: "+list.get(0).getMax());
+	    System.out.println("MIN: "+list.get(0).getMin());
+	    System.out.println("AVERAGE: "+list.get(0).getAverage());
+	    System.out.println("Pedejais ieraksts: ID: "+list.get(list.size()-1).getId());
+	    System.out.println("MAX: "+list.get(list.size()-1).getMax());
+	    System.out.println("MIN: "+list.get(list.size()-1).getMin());
+	    System.out.println("AVERAGE: "+list.get(list.size()-1).getAverage());
+		return list;
+	}
+	
+	private void sendCommandToServer(Command cmd){
+		try {
+			outputStream.writeObject(cmd);
+			outputStream.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args){
+		ClientImpl client = new ClientImpl();
+		client.setRemoteAddress("localhost");
+		client.setRemotePort(Server.DEFAULT_PORT);
+		client.connect();
+		List<String> fileList = client.getServerFileList();
+		for(String file : fileList){
+			List<StudentInfo> studentInfos = client.processStudentFile(new File(file), "	");
+		}
+	}
+
+}

@@ -1,0 +1,10 @@
+package ProjectHD;
+
+public class Supporter extends User {
+	private String userType;
+	
+	public Supporter (){
+		super();
+		userType = "supporter";
+	}
+}

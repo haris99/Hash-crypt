@@ -1,0 +1,171 @@
+package ProjectHD;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import java.awt.BorderLayout;
+import javax.swing.JFormattedTextField;
+import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.awt.Font;
+
+public class ClientWindow {
+
+	private JFrame frmClientWindow;
+	ObjectOutputStream supportObjectOutputStream;
+	ObjectInputStream supportObjectInputStream;
+	
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ClientWindow window = new ClientWindow();
+					window.frmClientWindow.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public ClientWindow() {
+		initialize();
+	}
+	
+	private void startSpeakers(Socket socket2) {
+		AudioInput speaker = new AudioInput(socket2);
+		Thread receiverThread = new Thread(speaker);
+		receiverThread.start();
+	}
+
+	private void startMicrophone(Socket socket2) {
+		AudioOutput microphone = new AudioOutput(socket2);
+		Thread senderThread = new Thread(microphone);
+		senderThread.start();
+	}
+	
+	
+	/*private void runConnection(){
+		//statusLabel.setText("Setting up streams");
+		try {
+			ServerSocket serverSocket = new ServerSocket(3001);
+			Socket socket2 = serverSocket.accept();
+			oos = new ObjectOutputStream(socket2.getOutputStream());
+			ois = new ObjectInputStream(socket2.getInputStream());
+			Message message;
+			try {
+				//statusLabel.setText("Waiting for connection");
+				message = (Message) ois.readObject();
+				//System.out.println(message.getMessageText());
+				startMicrophone(socket2);
+				startSpeakers(socket2);
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}*/
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frmClientWindow = new JFrame();
+		frmClientWindow.setTitle("Client window");
+		frmClientWindow.setBounds(100, 100, 450, 300);
+		frmClientWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmClientWindow.getContentPane().setLayout(null);
+
+		JLabel statusLabel = new JLabel("");
+		statusLabel.setFont(new Font("Tahoma", Font.PLAIN, 26));
+		statusLabel.setBounds(35, 173, 361, 78);
+		frmClientWindow.getContentPane().add(statusLabel);
+		
+		JFormattedTextField ipTextField = new JFormattedTextField();
+		ipTextField.setBounds(95, 108, 210, 20);
+		frmClientWindow.getContentPane().add(ipTextField);
+
+		JLabel lblEnterTheIp = new JLabel("Enter the ip adress of the server");
+		lblEnterTheIp.setBounds(117, 83, 188, 14);
+		frmClientWindow.getContentPane().add(lblEnterTheIp);
+
+		JLabel lblEnterYourUsername = new JLabel("Enter your username");
+		lblEnterYourUsername.setBounds(146, 11, 134, 14);
+		frmClientWindow.getContentPane().add(lblEnterYourUsername);
+
+		JFormattedTextField userNameTextField = new JFormattedTextField();
+		userNameTextField.setBounds(128, 36, 141, 20);
+		frmClientWindow.getContentPane().add(userNameTextField);
+
+		JButton btnNewButton = new JButton("Connect");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				String userName = userNameTextField.getText();
+				// String ipAdress = ipTextField.getText();
+				String ipAdress = "192.168.10.118";
+				int socket = 3000;
+					statusLabel.setText("Waiting for connection");
+					ServerConnector serverConnector = new ServerConnector (ipAdress, socket);
+					serverConnector.open();
+					serverConnector.writeMessage("client connect");
+					Message message = serverConnector.readMessage();
+					statusLabel.setText("Connection established");
+					//NEED TO CLOSE CONNECTION?
+					//runConnection();
+					
+					
+					//System.out.println(message.getMessageText());
+					//MAKE SUPPORT CONNECTOR
+					SupportConnector supportConnector = new SupportConnector (message.getMessageText(), 3001);
+					//Socket connectionToSupport;
+					try {
+						//connectionToSupport = new Socket(message.getMessageText(), 3001);
+						supportConnector.startMicrophone();
+						supportConnector.startSpeakers();
+						statusLabel.setText("Communication underway");
+					} catch (UnknownHostException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					//connection
+					System.out.println("client");
+		
+			}
+
+		});
+		btnNewButton.setBounds(153, 139, 89, 23);
+		frmClientWindow.getContentPane().add(btnNewButton);
+		
+
+	}
+}

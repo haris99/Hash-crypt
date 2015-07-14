@@ -1,0 +1,90 @@
+package ProjectHD;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.net.Socket;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+
+public class AudioInput implements Runnable {
+    private AudioFormat audioFormat;
+    private DataLine.Info line;
+    Socket connection = null;
+    private SourceDataLine inSpeaker = null;
+    private DataInputStream soundIn = null;
+	public volatile boolean running = true;
+	public volatile boolean stopped = false;
+    
+    
+    public AudioInput(Socket socket){
+    	connection = socket;
+    	audioFormat = new AudioFormat(8000.0f,8,1,true,false);
+    	line = new DataLine.Info(SourceDataLine.class, audioFormat);
+    	try {
+			inSpeaker = (SourceDataLine)AudioSystem.getLine(line);
+			//soundIn = new DataInputStream(connection.getInputStream());
+			try {
+				soundIn = new DataInputStream(connection.getInputStream());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			openSpeaker();
+			startSpeaker();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    public void start(){
+    	run();
+    }
+    
+    private void openSpeaker(){
+    	try {
+			inSpeaker.open();
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    private void startSpeaker(){
+    	inSpeaker.start();
+    }
+    
+	public void pause(){
+		running = false;
+	}
+	
+	public void resume(){
+		running = true;
+	}
+	
+	public void stop(){
+		stopped = true;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		int bytesRead = 0;
+	    byte[] inSound = new byte[1];
+	    while(bytesRead != -1 && running == true)
+	    {
+	    	System.out.println("WORKING");
+	        try{bytesRead = soundIn.read(inSound, 0, inSound.length);} catch (Exception e){}
+	        if(bytesRead >= 0)
+	        {
+	            inSpeaker.write(inSound, 0, bytesRead);
+	        }
+	      }
+	   }
+		
+	}
+

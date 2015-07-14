@@ -1,0 +1,113 @@
+package sef.module14.activity;
+
+import java.awt.Color;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JSlider;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+
+public class GUI {
+
+	private JFrame frame;
+	JSlider slider;
+	JSlider slider_1;
+	JSlider slider_2;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					GUI window = new GUI();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	
+	
+	/**
+	 * Create the application.
+	 */
+	public GUI() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+
+		
+		JLabel lblNewLabel = new JLabel("Red value:");
+		lblNewLabel.setBounds(220, 11, 102, 14);
+		frame.getContentPane().add(lblNewLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("Green value:");
+		lblNewLabel_1.setBounds(220, 45, 102, 14);
+		frame.getContentPane().add(lblNewLabel_1);
+		
+		JLabel lblNewLabel_2 = new JLabel("Blue value:");
+		lblNewLabel_2.setBounds(220, 79, 102, 14);
+		frame.getContentPane().add(lblNewLabel_2);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 215, 434, 47);
+		frame.getContentPane().add(panel);
+		
+		JLabel lblResult = new JLabel("Result");
+		panel.add(lblResult);
+		
+		slider = new JSlider();
+		slider.setMinimum(255);
+		slider.setMaximum(0);
+		slider.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				lblNewLabel.setText("Red value:"+slider.getValue());
+				panel.setBackground(new Color(slider.getValue(), slider_1.getValue(), slider_2.getValue()));
+				//
+			}
+		});
+		slider.setBounds(10, 11, 200, 23);
+		frame.getContentPane().add(slider);
+		
+		slider_1 = new JSlider();
+		slider_1.setMinimum(255);
+		slider_1.setMaximum(0);
+		slider_1.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				lblNewLabel_1.setText("Green value:"+slider_1.getValue());
+				panel.setBackground(bg);
+			}
+		});
+		slider_1.setBounds(10, 45, 200, 23);
+		frame.getContentPane().add(slider_1);
+		
+		
+		slider_2 = new JSlider();
+		slider_2.setMinimum(255);
+		slider_2.setMaximum(0);
+		slider_2.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				lblNewLabel_2.setText("Blue value:"+slider_2.getValue());
+				panel.setBackground(bg);
+			}
+		});
+		slider_2.setBounds(10, 79, 200, 23);
+		frame.getContentPane().add(slider_2);
+	}
+}

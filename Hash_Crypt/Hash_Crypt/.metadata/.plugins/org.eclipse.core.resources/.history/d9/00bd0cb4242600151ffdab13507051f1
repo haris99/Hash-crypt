@@ -1,0 +1,14 @@
+package ProjectHD;
+
+public class UserMessage extends Message {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7651679083834500875L;
+	
+	public UserMessage(String errorText, String remoteStackTrace){
+		this.super();
+	}
+
+}

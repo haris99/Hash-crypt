@@ -1,0 +1,24 @@
+1436345611143	Delete element
+1436346012898	Rename compilation unit 'Start.java'
+1436346790433	Rename package 'Project'
+1436423195365	Rename type 'AudioReceiver'
+1436423214756	Rename local variable 'receiver'
+1436425318796	Rename type 'AudioSender'
+1436434354529	Rename type 'Window'
+1436434488414	Rename type 'WaitWindow'
+1436434848257	Move compilation unit
+1436436594361	Delete element
+1436437478620	Delete element
+1436441886743	Rename field 'oos'
+1436441901090	Rename field 'ois'
+1436441932058	Rename field 'clientObjectOutputStream'
+1436510583387	Rename method 'sendMessage'
+1436511715463	Rename method 'handleMessage'
+1436516050960	Rename local variable 'conn'
+1436516612075	Extract method 'setDataStreams'
+1436516695422	Extract method 'startMicrophone'
+1436516710046	Extract method 'startSpeakers'
+1436516952263	Extract method 'startMicrophone'
+1436516967303	Extract method 'startSpeakers'
+1436519862520	Rename method 'readMessage'
+1436523877910	Rename local variable 'ipAdress'

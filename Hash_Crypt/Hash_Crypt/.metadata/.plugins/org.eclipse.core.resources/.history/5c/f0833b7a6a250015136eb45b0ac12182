@@ -1,0 +1,53 @@
+package ProjectHD;
+
+import java.util.Arrays;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.TargetDataLine;
+
+public class AudioReceiver implements Runnable {
+	private AudioFormat audioFormat;
+	private TargetDataLine microphone;
+	private DataLine.Info line;
+	public volatile boolean running = true;
+
+	public AudioReceiver() {
+		audioFormat = new AudioFormat(8000.0f, 8, 1, true, false); // was 8 bits
+		line = new DataLine.Info(TargetDataLine.class, audioFormat);
+		try {
+			microphone = (TargetDataLine) AudioSystem.getLine(line);
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void openMicrophone() {
+		try {
+			microphone.open(audioFormat);
+		} catch (LineUnavailableException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void startMicrophone() {
+		microphone.start();
+	}
+
+	public void run() {
+		byte[] soundBytes = new byte[1];
+		int readBytes = 0;
+			while ((readBytes != -1 && running == true) ) {
+				microphone.read(soundBytes, 0, soundBytes.length);
+				System.out.println(Arrays.toString(soundBytes));
+				Thread.sleep(100);
+				// System.out.println(suspended);
+			
+		}
+	}
+
+
+}

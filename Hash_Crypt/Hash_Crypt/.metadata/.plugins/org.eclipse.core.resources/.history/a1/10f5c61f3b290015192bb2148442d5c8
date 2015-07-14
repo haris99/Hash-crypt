@@ -1,0 +1,58 @@
+package ProjectHD;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ClientConnector {
+	private ServerSocket serverSocket;
+	private Socket acceptSocket;
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+	
+	
+	public ClientConnector (int port){
+		try {
+			serverSocket = new ServerSocket(port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void waitForConnection(){
+		try {
+			acceptSocket = serverSocket.accept();
+			oos = new ObjectOutputStream(acceptSocket.getOutputStream());
+			ois = new ObjectInputStream(acceptSocket.getInputStream());
+			Message message;
+			message = (Message) ois.readObject();
+			if (message.getMessageText() == "connect to room"){
+			System.out.println(message.getMessageText());
+			startMicrophone(acceptSocket);
+			startSpeakers(acceptSocket);
+			}
+			else
+			{
+				System.out.println("Wrong message");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void startMicrophone(){
+		AudioOutput microphone = new AudioOutput(acceptSocket);
+		Thread senderThread = new Thread(microphone);
+		senderThread.start();
+	}
+	
+	private void startSpeakers(){
+		AudioInput speaker = new AudioInput(acceptSocket);
+		Thread receiverThread = new Thread(speaker);
+		receiverThread.start();
+	}
+}

@@ -1,0 +1,19 @@
+1436775604852	Rename local variable 'connection'
+1436778405269	Delete element
+1436778525642	Rename type 'ClientConnector'
+1436778566335	Rename type 'ClientSoundConnector'
+1436781296936	Rename method 'setDataStreams'
+1436786330354	Rename local variable 'supporterIpAdress'
+1436794230011	Delete element
+1436861468183	Rename type 'Connector1'
+1436861539068	Rename type 'ServerChatConnector'
+1436861764378	Delete element
+1436861767810	Delete element
+1436861771093	Delete element
+1436861776175	Delete element
+1436861780301	Delete element
+1436862839236	Rename compilation unit 'test.java'
+1436862973264	Rename type 'ClassA'
+1436862986563	Rename type 'ClassBB'
+1436863644518	Rename compilation unit 'ClassB.java'
+1436864557168	Delete element

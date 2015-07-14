@@ -1,0 +1,25 @@
+package ProjectHD;
+
+import java.util.Arrays;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.TargetDataLine;
+import javax.swing.JOptionPane;
+
+public class Client {
+	//public final static String SERVER_IP = JOptionPane.showInputDialog("Please enter server ip"); 
+	
+	public static void main(String[] args) throws Exception{
+		Client client = new Client();
+		AudioReceiver receiver =new AudioReceiver();
+		receiver.openMicrophone();
+		receiver.startMicrophone();
+		receiver.start();
+		receiver.running = false;
+	}
+	
+	
+}
+

@@ -1,0 +1,16 @@
+package ProjectHD;
+
+	public class ClassBB {
+				ClassBB ( ) {
+					System.out.print("ClassA");
+				}
+			}    
+	
+			class ClassB extends ClassB {
+				public ClassB(){
+				System.out.print("ClassB");
+			}
+				public static void main(String a[ ]) {
+					ClassB objB = new ClassB() ;
+				}
+}

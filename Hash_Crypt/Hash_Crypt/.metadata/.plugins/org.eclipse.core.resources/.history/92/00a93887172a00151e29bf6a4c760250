@@ -1,0 +1,32 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+public class ThreadTest implements Runnable{
+	private String fileName;
+	
+	public void start(){
+		run();
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		try(BufferedReader br = new BufferedReader(new FileReader("file.txt"))) {
+	        StringBuilder sb = new StringBuilder();
+	        String line = br.readLine();
+
+	        while (line != null) {
+	            sb.append(line);
+	            sb.append(System.lineSeparator());
+	            line = br.readLine();
+	        }
+	        String everything = sb.toString();
+	    }
+		
+	}
+	
+	
+	
+	
+	
+}
